@@ -5,7 +5,7 @@
 A library created with the objective to facilitate creating configuration for applications utilizing JSON (or others formats in the future). While having the security of type checking the variables and resolver to default values.
 
 ## Reasong
-An alternative of [Convict](https://www.npmjs.com/package/convict) written in Typescript, the primary reason of this library is the need of dynamically updating the configuration file in  some of my projects (yeah, it cab be risk but I need to do it :/)
+An alternative of [Convict](https://www.npmjs.com/package/convict) written in Typescript, the primary reason of this library is the need of dynamically updating the configuration file in  some of my projects (yeah, it has it's owns risk but I need to do it :/ and take care of all possible errors)
 
 ## How to use
 Setup an configuration file anywhere in your machine (be certain that the application can read the file), and use it's path in configurator

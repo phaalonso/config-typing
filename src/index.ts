@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { InvalidFile } from './errors/InvalidPath';
+import { NotImplemented } from './errors/NotImplemented';
 import { RequiredConfig } from './errors/RequiredConfig';
 import { evaluator, IValidator } from './services/Evaluator';
 import { IConfigFormat } from './struct/IConfigFormat';
@@ -91,7 +92,7 @@ export function configurator(
 	}
 
 	const set = (key: string, value: unknown) => {
-		throw Error('Not implemented');
+		throw new NotImplemented('configurator.set');
 	}
 
 	const updateConfigFile = async () => {
@@ -102,6 +103,9 @@ export function configurator(
 		// Validate the tmp file and verify the configurations
 
 		// Delete the old configuration file, and rename the tmp file to substitute it
+		
+
+		throw new NotImplemented('configurator.updateConfigFile');
 	}
 
 	return {

@@ -1,4 +1,4 @@
-import { IConfig } from "./Config";
+import { IConfig } from "./IConfig";
 
 export interface IConfigFormat {
 	[key: string]: IConfig; 

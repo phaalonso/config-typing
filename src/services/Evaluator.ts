@@ -1,5 +1,5 @@
 import { InvalidType } from "../errors/InvalidType";
-import { IConfig } from "../struct/Config";
+import { IConfig } from "../struct/IConfig";
 import { TestFn, TestType } from "../struct/TestType";
 
 export interface IValidator {
