@@ -1,38 +1,26 @@
 import fs from 'fs';
 import { InvalidFile } from './errors/InvalidPath';
-import { InvalidType } from './errors/InvalidType';
 import { RequiredConfig } from './errors/RequiredConfig';
-import { IConfig } from './struct/Config';
-
-interface IConfigFormat {
-	[key: string]: IConfig; } interface IConfiguratorConfig {
-	logging: boolean;
-}
+import { evaluator, IValidator } from './services/Evaluator';
+import { IConfigFormat } from './struct/IConfigFormat';
+import { IConfiguratorConfig } from './struct/IConfiguratorConfig';
 
 interface IConfigurator {
 	load(path: string): void;
 	get(key: string): unknown;
 	set(key: string, value: unknown): void;
 	updateConfigFile(): Promise<void>;
+	evaluator: IValidator;
 }
 
-type TestFn = (args: any) => boolean;	
-
-interface TestType {
-	[key: string]: TestFn;
-}
-
-const testType: TestType = {
-	'*': (_) => true,
-	int: (num) => Number.isInteger(num),
-	port: (port) => Number.isInteger(port) && port >= 0 && port <= 65535,
-	string: (s) => typeof s === 'string',
-}
-
-export function configurator(config: IConfigFormat, options: IConfiguratorConfig = { logging: false }): IConfigurator {
+export function configurator(
+	config: IConfigFormat, 
+	options: IConfiguratorConfig = { logging: false }
+): IConfigurator {
 	const _logging = options.logging;
 	const _configFormat = config;
 	const _configs: { [key: string]: unknown } = {};
+	const _evaluator = evaluator();
 
 	//@ts-ignore
 	const log = (msg) => {
@@ -54,15 +42,6 @@ export function configurator(config: IConfigFormat, options: IConfiguratorConfig
 		const file = fs.readFileSync(path, { flag: 'r' });
 
 		return file;
-	}
-
-	const verifyConfig = (format: IConfig, value: unknown): boolean => {
-		console.log(format)
-		try {
-			return testType[format.type](value);
-		} catch (err) {
-			throw new InvalidType(format.type);
-		}
 	}
 
 	const loadConfig = (path: string) => {
@@ -93,7 +72,7 @@ export function configurator(config: IConfigFormat, options: IConfiguratorConfig
 			console.log(format)
 			const value: unknown = decoded[key];
 
-			const isValid = verifyConfig(format, value);
+			const isValid = _evaluator.validate(format, value);
 
 		if (isValid) {
 				if (value != undefined) {
@@ -130,5 +109,6 @@ export function configurator(config: IConfigFormat, options: IConfiguratorConfig
 		get,
 		set,
 		updateConfigFile,
+		evaluator: _evaluator,
 	}
 }
