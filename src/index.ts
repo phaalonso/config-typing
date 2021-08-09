@@ -12,6 +12,8 @@ interface IConfigFormat {
 interface IConfigurator {
 	load(path: string): void;
 	get(key: string): unknown;
+	set(key: string, value: unknown): void;
+	updateConfigFile(): Promise<void>;
 }
 
 type TestFn = (args: any) => boolean;	
@@ -23,7 +25,7 @@ interface TestType {
 const testType: TestType = {
 	'*': (_) => true,
 	int: (num) => Number.isInteger(num),
-	port: (port) => (port >= 0 && port <= 65535),
+	port: (port) => Number.isInteger(port) && port >= 0 && port <= 65535,
 	string: (s) => typeof s === 'string',
 }
 
@@ -109,8 +111,24 @@ export function configurator(config: IConfigFormat, options: IConfiguratorConfig
 		return _configs[key];
 	}
 
+	const set = (key: string, value: unknown) => {
+		throw Error('Not implemented');
+	}
+
+	const updateConfigFile = async () => {
+		// Verify if there is any changes, and is needed to update the file
+		
+		// Create an tmp file and write the configurations to it
+		
+		// Validate the tmp file and verify the configurations
+
+		// Delete the old configuration file, and rename the tmp file to substitute it
+	}
+
 	return {
 		load: loadConfig,
 		get,
+		set,
+		updateConfigFile,
 	}
 }
