@@ -1,6 +1,8 @@
+import { InvalidConfig } from "../errors/InvalidConfig";
 import { InvalidType } from "../errors/InvalidType";
 import { IConfig } from "../struct/IConfig";
 import { TestFn, TestType } from "../struct/TestType";
+import { ILogging } from "./Logging";
 
 export interface IValidator {
 	validate(format: IConfig, config: unknown): boolean;
@@ -10,7 +12,8 @@ export interface IValidator {
 	get(key: string): TestFn;
 }
 
-export function evaluator(): IValidator {
+export function evaluator(_logging: ILogging): IValidator {
+
 	const _validators: TestType = {
 		"*": (_) => true,
 		int: (c) => Number.isInteger(c),
@@ -21,12 +24,33 @@ export function evaluator(): IValidator {
 		array: (c) => typeof c === "object" && c instanceof Array,
 	};
 
-	const validate = (format: IConfig, config: unknown) => {
-		console.log(format);
-		try {
-			return _validators[format.type](config);
-		} catch (err) {
-			throw new InvalidType(format.type);
+	const validate = (format: IConfig, config: any) => {
+		_logging.log("=== Evaluating ===");
+		_logging.log("Format", format);
+		_logging.log("Config", config);
+
+		if (!format.type) {
+			const validSubConfig = Object.entries(format).some(([key, form]) => {
+				_logging.log([key, form]);
+				return validate(form, config[key]);
+			});
+
+			return validSubConfig;
+		} else {
+			try {
+				const isValid = _validators[format.type as string](config);
+
+				if (!isValid) {
+					throw new InvalidConfig(format.name, format.type as string);
+				}
+
+				return true;
+			} catch (err) {
+				if (err instanceof InvalidConfig) {
+					throw err;
+				}
+				throw new InvalidType(format.type as string);
+			}
 		}
 	};
 

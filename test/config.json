@@ -1,1 +1,6 @@
-{"databaseUrl":"linkProDb","serverPort":2222}
+{
+	"databaseUrl":"linkProDb",
+	"serverConfig": {
+		"serverPort": "2222"
+	}
+}
