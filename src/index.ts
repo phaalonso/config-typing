@@ -1,13 +1,12 @@
-import fs from 'fs';
-import { FormatNotExist } from './errors/ConfigNotExist';
-import { ConfigWrite } from './errors/ConfigWrite';
-import { InvalidConfig } from './errors/InvalidConfig';
-import { InvalidFile } from './errors/InvalidPath';
-import { NotImplemented } from './errors/NotImplemented';
-import { RequiredConfig } from './errors/RequiredConfig';
-import { evaluator, IValidator } from './services/Evaluator';
-import { IConfigFormat } from './struct/IConfigFormat';
-import { IConfiguratorConfig } from './struct/IConfiguratorConfig';
+import fs from "fs";
+import { FormatNotExist } from "./errors/ConfigNotExist";
+import { ConfigWrite } from "./errors/ConfigWrite";
+import { InvalidConfig } from "./errors/InvalidConfig";
+import { InvalidFile } from "./errors/InvalidPath";
+import { RequiredConfig } from "./errors/RequiredConfig";
+import { evaluator, IValidator } from "./services/Evaluator";
+import { IConfigFormat } from "./struct/IConfigFormat";
+import { IConfiguratorConfig } from "./struct/IConfiguratorConfig";
 
 interface IConfigurator {
 	load(path: string): void;
@@ -28,18 +27,17 @@ export function configurator(
 	let fileName: string;
 	let hasChanges = false;
 
-	Object.entries(config).forEach(([key, config]) => {
+	Object.values(config).forEach((config) => {
 		if (config.required && config.default != undefined) {
-			throw Error('Required specify that an config must be present in the file, so it wont work with the default value');
+			throw Error("Required specify that an config must be present in the file, so it wont work with the default value");
 		}
-	})
+	});
 
-	//@ts-ignore
-	const log = (msg) => {
+	const log = (msg: unknown) => {
 		if (_logging) {
 			console.log(msg);
 		}
-	}
+	};
 
 	log(_configFormat);
 
@@ -50,26 +48,26 @@ export function configurator(
 			throw new InvalidFile(path);
 		}
 
-		const file = fs.readFileSync(path, { flag: 'r' });
+		const file = fs.readFileSync(path, { flag: "r" });
 
 		return file;
-	}
+	};
 
 	const loadConfig = (path: string) => {
-		log(`Verifying if file exists`);
+		log("Verifying if file exists");
 		const file = loadFile(path);
 
 		fileName = path;
 
-		log('Parsing file as json');
+		log("Parsing file as json");
 		const decoded = JSON.parse(file.toString());
 		console.log(decoded);
 
-		const decodedKeys = Object.keys(decoded)
+		const decodedKeys = Object.keys(decoded);
 		const formatKeys = Object.keys(_configFormat);
 
 		// Find the keys that is not defined in the config file
-		const notDefinedKeys = formatKeys.filter(k => !decodedKeys.includes(k))
+		const notDefinedKeys = formatKeys.filter(k => !decodedKeys.includes(k));
 
 		// Identify if these config are required
 		notDefinedKeys.forEach(nd => {
@@ -78,11 +76,11 @@ export function configurator(
 			if (conf.required && !conf.default) {
 				throw new RequiredConfig(nd);
 			}
-		})
+		});
 
 		decodedKeys.forEach(key => {
 			const format = _configFormat[key];
-			console.log(format)
+			console.log(format);
 			const value: unknown = decoded[key];
 
 			const isValid = _evaluator.validate(format, value);
@@ -99,11 +97,11 @@ export function configurator(
 		});
 
 		console.log(_configs);
-	}
+	};
 
 	const get = (key: string) => {
 		return _configs[key];
-	}
+	};
 
 	const set = (key: string, value: unknown) => {
 		const format = _configFormat[key];
@@ -122,15 +120,15 @@ export function configurator(
 		} else {
 			throw new FormatNotExist(key);
 		}
-	}
+	};
 
 	const findValidFileName = (oldName: string) => {
-		const dotIndex = oldName.lastIndexOf('.');
+		const dotIndex = oldName.lastIndexOf(".");
 
 		const fileName = oldName.substr(0, dotIndex);
 		const extension = oldName.substr(dotIndex);
 
-		let isInUse = true;
+		const isInUse = true;
 		let number = 1;
 		let tempName =  fileName + number + extension;
 
@@ -147,7 +145,7 @@ export function configurator(
 		log(`Temp file name is ${tempName}`);
 
 		return tempName;
-	}
+	};
 
 	const updateConfigFile = async () => {
 		// Verify if there is any changes, and is needed to update the file
@@ -162,25 +160,25 @@ export function configurator(
 		const newConfig = JSON.stringify(_configs);
 
 		try {
-			fs.writeFileSync(tempFileName, newConfig, { flag: 'w' });
+			fs.writeFileSync(tempFileName, newConfig, { flag: "w" });
 		} catch (err) {
 			throw new ConfigWrite(tempFileName);
 		}
 		
 		// Validate the tmp file and verify the configurations
 		try {
-			fs.renameSync(fileName, fileName + '.backup');
+			fs.renameSync(fileName, fileName + ".backup");
 		} catch (err) {
-			throw Error('Error renaming the config file');
+			throw Error("Error renaming the config file");
 		}
 
 		// Rename the old configuration file, and rename the tmp file to substitute it
 		try {
 			fs.renameSync(tempFileName, fileName);
 		} catch (err) {
-			throw Error('Error renaming the temp file to have the name of the config file');
+			throw Error("Error renaming the temp file to have the name of the config file");
 		}
-	}
+	};
 
 	return {
 		load: loadConfig,
@@ -188,5 +186,5 @@ export function configurator(
 		set,
 		updateConfigFile,
 		evaluator: _evaluator,
-	}
+	};
 }

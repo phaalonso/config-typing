@@ -12,39 +12,39 @@ export interface IValidator {
 
 export function evaluator(): IValidator {
 	const _validators: TestType = {
-		'*': (_) => true,
+		"*": (_) => true,
 		int: (c) => Number.isInteger(c),
 		port: (c) => Number.isInteger(c) && c >= 0 && c <= 65535,
-		string: (c) => typeof c === 'string',
+		string: (c) => typeof c === "string",
 		//map: (c) => typeof c === 'object' && c instanceof Map,
 		//set: (c) => typeof c === 'object' && c instanceof Set,
-		array: (c) => typeof c === 'object' && c instanceof Array,
-	}
+		array: (c) => typeof c === "object" && c instanceof Array,
+	};
 
 	const validate = (format: IConfig, config: unknown) => {
-		console.log(format)
+		console.log(format);
 		try {
 			return _validators[format.type](config);
 		} catch (err) {
 			throw new InvalidType(format.type);
 		}
-	}
+	};
 
 	const add = (key: string, validator: TestFn) => {
 		_validators[key] = validator;
-	}
+	};
 
 	const remove = (key: string) => {
 		delete _validators[key];
-	}
+	};
 
 	const has = (key: string) => {
 		return _validators[key] != undefined;
-	}
+	};
 
 	const get = (key: string) => {
 		return _validators[key];
-	}
+	};
 
 	return {
 		validate,
