@@ -1,5 +1,8 @@
 import fs from 'fs';
+import { FormatNotExist } from './errors/ConfigNotExist';
+import { InvalidConfig } from './errors/InvalidConfig';
 import { InvalidFile } from './errors/InvalidPath';
+import { InvalidType } from './errors/InvalidType';
 import { NotImplemented } from './errors/NotImplemented';
 import { RequiredConfig } from './errors/RequiredConfig';
 import { evaluator, IValidator } from './services/Evaluator';
@@ -62,7 +65,7 @@ export function configurator(
 		// Identify if these config are required
 		notDefinedKeys.forEach(nd => {
 			const conf = _configFormat[nd];
-			//FIX: Verify if it works fine even when default valuue is an boolean
+			//FIX: Verify if it works fine even when default value is an boolean
 			if (conf.required && !conf.default) {
 				throw new RequiredConfig(nd);
 			}
@@ -75,12 +78,14 @@ export function configurator(
 
 			const isValid = _evaluator.validate(format, value);
 
-		if (isValid) {
+			if (isValid) {
 				if (value != undefined) {
 					_configs[key] = value;		
 				} else if (format.default) {
 					_configs[key] = format.default;	
 				}
+			} else {
+				throw new InvalidConfig(key, format.type);
 			}
 		});
 
@@ -92,7 +97,21 @@ export function configurator(
 	}
 
 	const set = (key: string, value: unknown) => {
-		throw new NotImplemented('configurator.set');
+		const format = _configFormat[key];
+
+		if (format) {
+			const isValid = _evaluator.validate(format, value);
+
+			if (isValid) {
+				if (value != undefined)	 {
+					_configs[key] = value;
+				}
+			} else {
+				throw new InvalidConfig(key, format.type);
+			}
+		} else {
+			throw new FormatNotExist(key);
+		}
 	}
 
 	const updateConfigFile = async () => {

@@ -1,5 +1,5 @@
 export interface IConfig {
-	description: string;
+	description?: string;
 	type: string;
 	default?: any;
 	required?: boolean;
