@@ -9,7 +9,6 @@ const Configurator = configurator({
 	},
 	serverPort: {
 		type: 'port',
-		required: true,
 		default: 3333,
 	}
 }, {
@@ -22,3 +21,4 @@ Configurator.set('serverPort', 2222);
 
 console.log(Configurator.get('databaseUrl'));
 console.log(Configurator.get('serverPort'));
+Configurator.updateConfigFile();

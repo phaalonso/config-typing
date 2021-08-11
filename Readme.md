@@ -36,8 +36,8 @@ console.log(Configurator.get('databaseUrl'));
 
 ## Todo
 - [X] Ability to the user add new types
-- [ ] Method that permit changing an config
-- [ ] Updating the configuration file
+- [X] Method that permit changing an config
+- [X] Updating the configuration file
 - [ ] Implementing unit test's
 
 ## Inspiration
