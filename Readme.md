@@ -1,8 +1,8 @@
-# Configurator
+# Config validator
 
 [Npm package](https://www.npmjs.com/package/config-typing)
 
-A library created with the objective to facilitate creating configuration for applications utilizing JSON (or others formats in the future). While having the security of type checking the variables and resolver to default values.
+A library created with the objective to facilitate creating configurating configuration that are stored in JSON files. It's uses a schema defined by the user, that the loaded json file needs to have otherside the loading of the file will fail as an "Config error".
 
 ## Important
 In the moment this library is in pre-release, so be careful when to use it. There can be lots of bugs or some problems that needs to be fixed.
