@@ -1,12 +1,15 @@
 {
   "name": "config-validation",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An config loader with type checking and resolver to defaults values",
   "repository": "https://github.com/phaalonso/config-typing",
   "author": "phaalonso",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "devDependencies": {
     "@types/node": "^16.4.13",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
