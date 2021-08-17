@@ -1,6 +1,6 @@
 # Config validator
 
-[Npm package](https://www.npmjs.com/package/config-typing)
+[Npm package](https://www.npmjs.com/package/config-validation)
 
 A library created with the objective to facilitate creating configurating configuration that are stored in JSON files. It's uses a schema defined by the user, that the loaded json file needs to have otherside the loading of the file will fail as an "Config error".
 
@@ -15,7 +15,7 @@ Setup an configuration file anywhere in your machine (be certain that the applic
 
 Example:
 ```ts
-import { configurator } from "config-type";
+import { configurator } from "config-validation";
 import path from 'path';
 
 const Configurator = configurator({
