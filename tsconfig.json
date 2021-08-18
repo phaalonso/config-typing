@@ -6,7 +6,6 @@
     "checkJs": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "src",
     "strict": true,
     "noImplicitThis": true,
 
@@ -15,5 +14,8 @@
 
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "include": [
+	  "src/**/*"
+  ]
 }

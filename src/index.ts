@@ -12,8 +12,8 @@ import { IConfiguratorConfig } from "./struct/IConfiguratorConfig";
 
 interface IConfigurator {
 	load(path: string): void;
-	get(key: string): unknown;
-	getConfig(): { [key: string]: unknown };
+	get(key: string): any;
+	getConfig(): { [key: string]: any };
 	set(key: string, value: unknown): void;
 	updateConfigFile(): Promise<void>;
 	evaluator: IValidator;
