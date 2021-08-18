@@ -1,6 +1,6 @@
 {
   "name": "config-validation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An config loader with type checking and resolver to defaults values",
   "repository": "https://github.com/phaalonso/config-typing",
   "author": "phaalonso",
