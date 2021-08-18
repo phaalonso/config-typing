@@ -17,6 +17,7 @@ export function evaluator(_logging: ILogging): IValidator {
 	const _validators: TestType = {
 		"*": (_) => true,
 		int: (c) => Number.isInteger(c),
+		number: (c) => typeof c === "number",
 		port: (c) => Number.isInteger(c) && c >= 0 && c <= 65535,
 		string: (c) => typeof c === "string",
 		//map: (c) => typeof c === 'object' && c instanceof Map,
